@@ -14,14 +14,14 @@ public class Habit {
     public Habit(String habitName, int goalPerMonth) {
         this.habitName = habitName;
         this.goalPerMonth = goalPerMonth;
-        updateGoalPerMonth(); // Установим goalPerMonth при создании привычки
+        updateGoalPerMonth();
         this.habitId = nextId++;
         this.completeHistory = new HashMap<>();
     }
     public Habit(String habitName) {
         this.habitName = habitName;
         this.goalPerMonth = 32;
-        updateGoalPerMonth(); // Установим goalPerMonth при создании привычки
+        updateGoalPerMonth();
         this.habitId = nextId++;
         this.completeHistory = new HashMap<>();
     }

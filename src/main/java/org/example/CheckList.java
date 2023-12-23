@@ -19,11 +19,10 @@ public class CheckList {
         message.setReplyMarkup(createInlineKeyboard(habit.getHabitId()));
         return message;
     }
-    // Метод для создания Inline Keyboard
     private static InlineKeyboardMarkup createInlineKeyboard(int habitId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        // Создаем кнопки "Yes" и "No"
+
         List<InlineKeyboardButton> row = new ArrayList<>();
         row.add(InlineKeyboardButton.builder().text("Done").callbackData("t"+habitId).build());
         row.add(InlineKeyboardButton.builder().text("Neah").callbackData("f"+habitId).build());
