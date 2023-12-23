@@ -204,12 +204,4 @@ public class MyBot extends TelegramLongPollingBot {
         }
         return properties.getProperty("botToken");
     }
-//    private void updateHabitsList(long chatId){
-//        ArrayList<Habit> userHabits = habitsList.getOrDefault(chatId, new ArrayList<>());
-//        if (userHabits.isEmpty()) System.out.println("User has empty habit list");
-//        for (Habit habit : userHabits) {
-//            habit.resetCompletionForNewMonth();
-//        }
-//        System.out.println("User's habit list has been update");
-//    }
 }
