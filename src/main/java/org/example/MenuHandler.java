@@ -129,8 +129,8 @@ public class MenuHandler {
         for (int day = 1; day <= daysInMonth; day++) {
             // Создаем LocalDate для каждого дня в текущем месяце
             LocalDate currentDate = currentYearMonth.atDay(day);
-            if (habit.getCompletionByDay().containsKey(currentDate)){
-                if(habit.getCompletionByDay().get(currentDate)){
+            if (habit.getCompleteHistory().containsKey(currentDate)){
+                if(habit.getCompleteHistory().get(currentDate)){
                     progressBar.append("●");
                 }else {
                     progressBar.append("○");
