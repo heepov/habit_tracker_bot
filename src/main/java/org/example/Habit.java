@@ -73,7 +73,6 @@ public class Habit {
         for (Map.Entry<LocalDate, Boolean> entry : completeHistory.entrySet()) {
             LocalDate date = entry.getKey();
             if (date.getYear() == currentYearMonth.getYear() && date.getMonth() == currentYearMonth.getMonth()) {
-                // Эта цель выполнена в текущем месяце
                 if (entry.getValue()) {
                     count++;
                 }
