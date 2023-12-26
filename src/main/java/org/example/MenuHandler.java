@@ -156,7 +156,7 @@ public class MenuHandler {
         ArrayList<Habit> userHabits = bot.habitsList.getOrDefault(chatId, new ArrayList<>());
         if (userHabits.isEmpty()) return String.format(TextTemplates.EMPTY_HABIT_LIST);
         StringBuilder habitsText = new StringBuilder();
-        habitsText.append("<b>These all your habits:</b>\n");
+        habitsText.append(String.format(TextTemplates.ALL_HABITS) + "\n");
         for (Habit habit : userHabits) {
             habitsText.append("<code>" + habit.getHabitName() + "</code> ");
             habitsText.append(progressBarCreate(habit) + " ");

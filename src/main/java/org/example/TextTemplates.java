@@ -26,7 +26,7 @@ public class TextTemplates {
     public static final String CHANGE_HABIT_GOAL = "The goal of the habit \"%s\" has been changed to %d";
     public static final String CHANGE_HABIT_NAME = "The name of the habit \"%s\" has been changed to \"%s\"";
 
-    public static final String ERROR_MENU_COMMAND = "Incorrect message use " + MENU + "command";
+    public static final String ERROR_MENU_COMMAND = "Incorrect message use " + MENU + " command";
     public static final String INFO_TEXT = "In this bot you can track your habits. " +
             "Set goals and review your progress. To get started send " + MENU;
     public static final String MENU_PRINT =
@@ -44,4 +44,8 @@ public class TextTemplates {
             /goal 'habit_name' : 'new_monthly_goal'\n<i>to change monthly goal for your habits\nlike <code>/add meditation : 24</code></i>\n
             /rename 'old_habit_name' : 'new_habit_name'\n<i>to rename your habit\nlike <code>/rename meditation : drink beer</code></i>\n
             """;
+    public static final String ALL_HABITS = "<b>These all your habits:</b>";
+    public static final String TODAY_HABITS_LIST = "Today habit check list:";
+    public static final String DATE_HABITS_LIST = "Habit check list from date";
+    public static final String ERROR_WRONG_DATE = "Wrong date!";
 }

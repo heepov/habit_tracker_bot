@@ -23,23 +23,18 @@ import static org.example.FileManager.saveDataToFile;
 public class MyBot extends TelegramLongPollingBot {
     public Map<Long, ArrayList<Habit>> habitsList = new HashMap<>();
     private LocalDate date;
+    private Properties properties = new Properties();
     public static void main(String[] args) {
         MyBot bot = new MyBot();
         bot.botConnect();
     }
     private void botConnect() {
         try {
+            setProperties();
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(this);
             // Загрузка данных при запуске бота
-            Properties properties = new Properties();
-            try {
-                properties.load(new FileInputStream("src/main/conf/bot.properties"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             habitsList = loadDataFromFile(properties.getProperty("dataFilePath"));
-            System.out.println(properties.getProperty("dataFilePath"));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -54,12 +49,6 @@ public class MyBot extends TelegramLongPollingBot {
             System.out.println("Something else");
         }
         // Сохранение данных при получении сообщений/обновлений
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileInputStream("src/main/conf/bot.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         saveDataToFile(properties.getProperty("dataFilePath"), habitsList);
     }
     private  void processCallbackQuery(CallbackQuery callbackQuery){
@@ -110,14 +99,14 @@ public class MyBot extends TelegramLongPollingBot {
                 if (messageText.startsWith("/check ")) {
                     LocalDate date = getDateFromMessage(messageText.substring(7));
                     if (date != null){
-                        sendTextMessage(chatId, "Habit check list from date " + date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + ":");
+                        sendTextMessage(chatId,  String.format(TextTemplates.DATE_HABITS_LIST) + " " + date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + ":");
                         this.date = date;
                     }else {
-                        sendTextMessage(chatId, "Wrong date!");
+                        sendTextMessage(chatId, String.format(TextTemplates.ERROR_WRONG_DATE));
                         return;
                     }
                 }else {
-                    sendTextMessage(chatId, "Today habit check list:");
+                    sendTextMessage(chatId, String.format(TextTemplates.TODAY_HABITS_LIST));
                     this.date = LocalDate.now();
                 }
                 List<SendMessage> habitListMessages = new ArrayList<>();
@@ -180,26 +169,20 @@ public class MyBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-    @Override
-    public String getBotUsername() {
-        Properties properties = new Properties();
+    private void setProperties(){
         try {
             properties.load(new FileInputStream("src/main/conf/bot.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public String getBotUsername() {
         return properties.getProperty("botUserName");
     }
 
     @Override
     public String getBotToken() {
-        Properties properties = new Properties();
-
-        try {
-            properties.load(new FileInputStream("src/main/conf/bot.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         return properties.getProperty("botToken");
     }
 }
