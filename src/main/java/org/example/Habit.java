@@ -1,10 +1,11 @@
 package org.example;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
-public class Habit {
+public class Habit  implements Serializable {
     private static int nextId = 1;
     private int habitId;
     private String habitName;
