@@ -14,7 +14,7 @@ public class FileManager {
     public static void saveDataToFile(String filename, Map<Long, ArrayList<Habit>> data) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(data);
-            System.out.println("Данные успешно сохранены в файл: " + filename);
+            System.out.println("Data successfully saved to file:" + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,12 +33,12 @@ public class FileManager {
             }
         } else {
             // Если файла нет, создадим новый
-            System.out.println("Файл не найден или не доступен для чтения. Создан новый файл.");
+            System.out.println("The file was not found or cannot be read. A new file has been created.");
             try {
                 Files.createFile(path);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
-                System.out.println("Не удалось создать файл.");
+                System.out.println("Failed to create file.");
             }
             return new HashMap<>();
         }
