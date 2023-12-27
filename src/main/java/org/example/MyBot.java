@@ -15,13 +15,17 @@ import static org.example.FileManager.loadDataFromFile;
 import static org.example.FileManager.saveDataToFile;
 
 public class MyBot extends TelegramLongPollingBot {
+    // Chat ID and Habit List (unique list for one user)
     public Map<Long, ArrayList<Habit>> habitsList;
     public LocalDate date;
+    // file with "bot User Name", "bot Token" and "data File Path"
     private final Properties properties = new Properties();
     private final IncomingMessageHandler incomingMessageHandler;
     private final CallbackQueryHandler callbackQueryHandler;
 
+    // initial all
     public MyBot() {
+        // load properties file
         try (FileInputStream input = new FileInputStream("src/main/conf/bot.properties")) {
             properties.load(input);
         } catch (IOException e) {
@@ -30,7 +34,7 @@ public class MyBot extends TelegramLongPollingBot {
         date = LocalDate.now();
         this.incomingMessageHandler = new IncomingMessageHandler(this);
         this.callbackQueryHandler = new CallbackQueryHandler(this);
-        // Загрузка данных при запуске бота
+        // load data file
         habitsList = loadDataFromFile(properties.getProperty("dataFilePath"));
     }
 
@@ -46,13 +50,18 @@ public class MyBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
+    // actually main function
     @Override
     public void onUpdateReceived(Update update) {
+        // for user send message
         if (update.hasMessage() && update.getMessage().hasText()) {
+            System.out.println(update.getMessage().getChatId());
             incomingMessageHandler.processIncomingMessage(update.getMessage());
+        // for user tap the button or something like this
         }else if ((update.hasCallbackQuery())) {
             callbackQueryHandler.processCallbackQuery(update.getCallbackQuery());
         }else {
+        //other user's actions
             System.out.println("Something else");
         }
         // Сохранение данных при получении сообщений/обновлений
@@ -62,7 +71,6 @@ public class MyBot extends TelegramLongPollingBot {
     public String getBotUsername() {
         return properties.getProperty("botUserName");
     }
-
     @Override
     public String getBotToken() {
         return properties.getProperty("botToken");

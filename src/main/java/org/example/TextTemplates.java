@@ -1,5 +1,6 @@
 package org.example;
-
+// this file contains all string variables
+// just for simplify to change them
 public class TextTemplates {
     public static final String START = "/start";
     public static final String INFO = "/info";

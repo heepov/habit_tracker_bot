@@ -43,6 +43,7 @@ public class IncomingMessageHandler {
             // command "/check" or "/check DD.MM.YYYY"
         } else if (messageText.startsWith(String.format(TextTemplates.CHECK))) {
             menuHandler.handleCheckHabits(chatId, messageText);
+            // Unknown command
         } else {
             messageSender.sendTextMessage(chatId, String.format(TextTemplates.ERROR_MENU_COMMAND));
         }

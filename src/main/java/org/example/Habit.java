@@ -6,25 +6,28 @@ import java.time.YearMonth;
 import java.util.*;
 
 public class Habit  implements Serializable {
+    // hide parameter needs to generate Habit ID
     private static int nextId = 1;
     private int habitId;
     private String habitName;
-    private int goalPerMonth;
-    private Map<LocalDate, Boolean> completeHistory;
+    private int habitMonthlyGoal;
+    private Map<LocalDate, Boolean> habitProgressHistory;
 
-    public Habit(String habitName, int goalPerMonth) {
+    public Habit(String habitName, int habitMonthlyGoal) {
         this.habitName = habitName;
-        this.goalPerMonth = goalPerMonth;
-        updateGoalPerMonth(); // Установим goalPerMonth при создании привычки
+        this.habitMonthlyGoal = habitMonthlyGoal;
+        //checking correct input monthly goal (0 < goal <= day current month)
+        checkHabitGoalPerMonth();
         this.habitId = nextId++;
-        this.completeHistory = new HashMap<>();
+        this.habitProgressHistory = new HashMap<>();
     }
     public Habit(String habitName) {
         this.habitName = habitName;
-        this.goalPerMonth = 32;
-        updateGoalPerMonth(); // Установим goalPerMonth при создании привычки
+        this.habitMonthlyGoal = 32;
+        //set monthly goal (every day for current month)
+        checkHabitGoalPerMonth();
         this.habitId = nextId++;
-        this.completeHistory = new HashMap<>();
+        this.habitProgressHistory = new HashMap<>();
     }
 
     public int getHabitId() {
@@ -36,51 +39,50 @@ public class Habit  implements Serializable {
     public void setHabitName(String habitName){
         this.habitName = habitName;
     }
-    public int getGoalPerMonth() {
-        return goalPerMonth;
+    public int getHabitMonthlyGoal() {
+        return habitMonthlyGoal;
     }
-    public void setGoalPerMonth(int goalPerMonth){
-        this.goalPerMonth = goalPerMonth;
-        updateGoalPerMonth();
+    public void setHabitMonthlyGoal(int habitMonthlyGoal){
+        this.habitMonthlyGoal = habitMonthlyGoal;
+        //checking correct input monthly goal (0 < goal <= day current month)
+        checkHabitGoalPerMonth();
     }
 
-    public Map<LocalDate, Boolean> getCompleteHistory() {
-        return completeHistory;
+    public Map<LocalDate, Boolean> getHabitProgressHistory() {
+        return habitProgressHistory;
     }
-    public void setTodayCompleteHistory(boolean toDo) {
-        completeHistory.put(LocalDate.now(), toDo);
+    public void setProgressHistoryByDate(LocalDate date, boolean toDo) {
+        habitProgressHistory.put(date, toDo);
     }
-    public void setTodayCompleteHistory(LocalDate date, boolean toDo) {
-        completeHistory.put(date, toDo);
-    }
-    private void updateGoalPerMonth() {
+
+    //if last month goal set up for everyday next month set to everyday too
+    // and check out of range 0 < habitMonthlyGoal < days this month
+    private void checkHabitGoalPerMonth() {
         YearMonth currentYearMonth = YearMonth.now();
-        int daysInMonth = currentYearMonth.lengthOfMonth();
+        int daysInThisMonth = currentYearMonth.lengthOfMonth();
         int daysInPreviousMonth = currentYearMonth.minusMonths(1).lengthOfMonth();
 
-        if (goalPerMonth == daysInPreviousMonth) {
-            goalPerMonth = daysInMonth;
-        } else if (goalPerMonth>=daysInMonth) {
-            goalPerMonth = daysInMonth;
+        if (habitMonthlyGoal == daysInPreviousMonth) {
+            habitMonthlyGoal = daysInThisMonth;
+        } else if (habitMonthlyGoal >=daysInThisMonth) {
+            habitMonthlyGoal = daysInThisMonth;
         } else {
-            goalPerMonth = Math.min(daysInMonth, goalPerMonth);
+            habitMonthlyGoal = Math.min(daysInThisMonth, habitMonthlyGoal);
         }
     }
 
-    public int countCompletedGoalsForCurrentMonth() {
+    public int countCompletedOneHabitGoalsForCurrentMonth() {
         YearMonth currentYearMonth = YearMonth.now();
         int count = 0;
-
-        for (Map.Entry<LocalDate, Boolean> entry : completeHistory.entrySet()) {
+        for (Map.Entry<LocalDate, Boolean> entry : habitProgressHistory.entrySet()) {
             LocalDate date = entry.getKey();
+            // this habit did in this month
             if (date.getYear() == currentYearMonth.getYear() && date.getMonth() == currentYearMonth.getMonth()) {
-                // Эта цель выполнена в текущем месяце
                 if (entry.getValue()) {
                     count++;
                 }
             }
         }
-
         return count;
     }
 }
