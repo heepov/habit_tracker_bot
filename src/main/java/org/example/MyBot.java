@@ -64,7 +64,7 @@ public class MyBot extends TelegramLongPollingBot {
         //other user's actions
             System.out.println("Something else");
         }
-        // save habitsList to data file
+        // Сохранение данных при получении сообщений/обновлений
         saveDataToFile(properties.getProperty("dataFilePath"), habitsList);
     }
     @Override

@@ -1,4 +1,4 @@
-# Just a simple Habit Tracker Telegram Bot.
+# A very simple "Habit Tracker" telegram bot.
 `educational project`, `java`, `student code`
 
 Thist bot has full Habit Tracker functional:
