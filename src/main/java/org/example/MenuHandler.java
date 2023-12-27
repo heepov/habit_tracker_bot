@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// actually main command logical class
 public class MenuHandler {
     private final MessageSender messageSender;
     private final MyBot bot;
@@ -20,41 +21,50 @@ public class MenuHandler {
         this.bot = bot;
         this.messageSender = new MessageSender(bot);
     }
+
     public void handleAddHabit(long chatId, String messageText) {
         ArrayList<Habit> userHabits = bot.habitsList.getOrDefault(chatId, new ArrayList<>());
-        if (messageText.contains(":")){
+        // check user's message on exist habit name with goal
+        if (messageText.contains(":")){ // check message for our delimiter
             String habitName = getHabitNameFromMessage(messageText);
             if (habitName != null) {
                 Habit habit = findHabit(userHabits, habitName);
-                if (habit == null) {
+                if (habit == null) { // check habit list for already existing this habit name (must be unique)
                     Integer habitGoal = getHabitGoalFromMessage(messageText);
-                    if (habitGoal != null) {
+                    if (habitGoal != null) { //check correct habit goal
                         Habit newHabit = new Habit(habitName, habitGoal);
+                        // add new habit to the list
                         userHabits.add(newHabit);
                         bot.habitsList.put(chatId, userHabits);
+                        // send success message
                         messageSender.sendTextMessage(chatId,
-                                String.format(TextTemplates.ADD_NEW_HABIT, newHabit.getHabitName(), newHabit.getGoalPerMonth()));
-                    } else {
+                                String.format(TextTemplates.ADD_NEW_HABIT, newHabit.getHabitName(), newHabit.getHabitMonthlyGoal()));
+                    } else { // uncorrect goal
                         messageSender.sendTextMessage(chatId,
                                 String.format(TextTemplates.ERROR_IDENTIFY, "goal", "/add habit_name : habit_goal"));
                     }
-                } else {
+                } else { // this habit name already exist
                     messageSender.sendTextMessage(chatId,
                             String.format(TextTemplates.ERROR_ADD_HABIT_DUPLICATED, habitName));
                 }
-            } else {
+            } else { // uncorrect habit name
                 messageSender.sendTextMessage(chatId,
                         String.format(TextTemplates.ERROR_IDENTIFY, "habit name", "/add habit_name : habit_goal"));
             }
+        // if user's message on exist only a habit name
         }else {
+            // check habit list for already existing this habit name (must be unique)
             Habit habit = findHabit(userHabits, messageText);
             if (habit == null) {
                 Habit newHabit = new Habit(messageText);
+                // add new habit to the list
                 userHabits.add(newHabit);
                 bot.habitsList.put(chatId, userHabits);
+                // send success message
                 messageSender.sendTextMessage(chatId,
-                        String.format(TextTemplates.ADD_NEW_HABIT, newHabit.getHabitName(), newHabit.getGoalPerMonth()));
+                        String.format(TextTemplates.ADD_NEW_HABIT, newHabit.getHabitName(), newHabit.getHabitMonthlyGoal()));
             }else {
+                // this habit name already exist
                 messageSender.sendTextMessage(chatId,
                         String.format(TextTemplates.ERROR_ADD_HABIT_DUPLICATED, messageText));
             }
@@ -88,10 +98,10 @@ public class MenuHandler {
             if (habit != null) {
                 Integer newHabitGoal = getHabitGoalFromMessage(messageText);
                 if (newHabitGoal != null) {
-                    habit.setGoalPerMonth(newHabitGoal);
+                    habit.setHabitMonthlyGoal(newHabitGoal);
                     bot.habitsList.put(chatId, userHabits);
                     messageSender.sendTextMessage(chatId,
-                            String.format(TextTemplates.CHANGE_HABIT_GOAL, habit.getHabitName(), habit.getGoalPerMonth()));
+                            String.format(TextTemplates.CHANGE_HABIT_GOAL, habit.getHabitName(), habit.getHabitMonthlyGoal()));
                 } else {
                     messageSender.sendTextMessage(chatId,
                             String.format(TextTemplates.ERROR_IDENTIFY, "goal", "/goal habit_name : new_habit_goal"));
@@ -150,8 +160,8 @@ public class MenuHandler {
             habitsText
                     .append("<b>" + capitalizeFirstLetter(habit.getHabitName()) + "</b>" + "\n")
                     .append("<code>" + progressBarCreate(habit) + "</code> ")
-                    .append(habit.countCompletedGoalsForCurrentMonth() + " / ")
-                    .append(habit.getGoalPerMonth() + "\n\n");
+                    .append(habit.countCompletedOneHabitGoalsForCurrentMonth() + " / ")
+                    .append(habit.getHabitMonthlyGoal() + "\n\n");
         }
         messageSender.sendTextMessage(chatId, habitsText.toString());
     }
@@ -179,7 +189,7 @@ public class MenuHandler {
             habitListMessages.add(habitMessage);
         }
         for (SendMessage habitMessage : habitListMessages) {
-            messageSender.sendAllTextMessage(chatId, habitMessage.getText(), (InlineKeyboardMarkup) habitMessage.getReplyMarkup());
+            messageSender.sendGroupTextMessages(chatId, habitMessage.getText(), (InlineKeyboardMarkup) habitMessage.getReplyMarkup());
         }
     }
 
@@ -194,8 +204,8 @@ public class MenuHandler {
         for (int day = 1; day <= daysInMonth; day++) {
             // Создаем LocalDate для каждого дня в текущем месяце
             LocalDate currentDate = currentYearMonth.atDay(day);
-            if (habit.getCompleteHistory().containsKey(currentDate)){
-                if(habit.getCompleteHistory().get(currentDate)){
+            if (habit.getHabitProgressHistory().containsKey(currentDate)){
+                if(habit.getHabitProgressHistory().get(currentDate)){
                     progressBar.append("V");
                 }else {
                     progressBar.append("X");

@@ -10,17 +10,18 @@ import java.util.Map;
 
 public class FileManager {
 
-    // Сохранение данных в файл
+    // Save data file
     public static void saveDataToFile(String filename, Map<Long, ArrayList<Habit>> data) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(data);
+            // logging print
             System.out.println("Data successfully saved to file:" + filename);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Загрузка данных из файла
+    // Load or create data file
     public static Map<Long, ArrayList<Habit>> loadDataFromFile(String filename) {
         Path path = Paths.get(filename);
 
@@ -32,7 +33,7 @@ public class FileManager {
                 return new HashMap<>(); // Возвращаем пустую карту в случае ошибки
             }
         } else {
-            // Если файла нет, создадим новый
+            // If data file isnt exist than create data file
             System.out.println("The file was not found or cannot be read. A new file has been created.");
             try {
                 Files.createFile(path);

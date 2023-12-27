@@ -14,9 +14,11 @@ public class MessageSender {
         this.bot = bot;
     }
 
+    // change already sent message by Message ID
     public void editMessageText(Message message, String text) {
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setChatId(message.getChatId());
+        //get Message ID
         editMessageText.setMessageId(message.getMessageId());
         editMessageText.setText(text);
         try {
@@ -37,15 +39,14 @@ public class MessageSender {
             e.printStackTrace();
         }
     }
-
-    public void sendAllTextMessage(long chatId, String text, InlineKeyboardMarkup keyboardMarkup) {
+    //create and send set of messages
+    public void sendGroupTextMessages(long chatId, String text, InlineKeyboardMarkup keyboardMarkup) {
         SendMessage message = new SendMessage()
                 .builder()
                 .chatId(chatId)
                 .text(text)
                 .replyMarkup(keyboardMarkup)
                 .build();
-
         try {
             bot.execute(message);
         } catch (TelegramApiException e) {
