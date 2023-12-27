@@ -23,7 +23,7 @@ import static org.example.FileManager.saveDataToFile;
 public class MyBot extends TelegramLongPollingBot {
     public Map<Long, ArrayList<Habit>> habitsList = new HashMap<>();
     private LocalDate date;
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     public static void main(String[] args) {
         MyBot bot = new MyBot();
         bot.botConnect();
@@ -132,43 +132,43 @@ public class MyBot extends TelegramLongPollingBot {
             return null;
         }
     }
-    private void editMessageText(Message message, String text){
-        EditMessageText editMessageText = new EditMessageText();
-        editMessageText.setChatId(message.getChatId());
-        editMessageText.setMessageId(message.getMessageId());
-        editMessageText.setText(text);
-        try {
-            execute(editMessageText);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-    private void sendTextMessage(long chatId, String text) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(text);
-        sendMessage.enableHtml(true);
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendAllTextMessage(Long chatId, String text, InlineKeyboardMarkup keyboardMarkup) {
-        SendMessage message = new SendMessage()
-                .builder()
-                .chatId(chatId)
-                .text(text)
-                .replyMarkup(keyboardMarkup)
-                .build();
-
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void editMessageText(Message message, String text){
+//        EditMessageText editMessageText = new EditMessageText();
+//        editMessageText.setChatId(message.getChatId());
+//        editMessageText.setMessageId(message.getMessageId());
+//        editMessageText.setText(text);
+//        try {
+//            execute(editMessageText);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//    private void sendTextMessage(long chatId, String text) {
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.setChatId(chatId);
+//        sendMessage.setText(text);
+//        sendMessage.enableHtml(true);
+//        try {
+//            execute(sendMessage);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void sendAllTextMessage(Long chatId, String text, InlineKeyboardMarkup keyboardMarkup) {
+//        SendMessage message = new SendMessage()
+//                .builder()
+//                .chatId(chatId)
+//                .text(text)
+//                .replyMarkup(keyboardMarkup)
+//                .build();
+//
+//        try {
+//            execute(message);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void setProperties(){
         try {
             properties.load(new FileInputStream("src/main/conf/bot.properties"));
