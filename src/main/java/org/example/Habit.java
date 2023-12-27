@@ -86,6 +86,3 @@ public class Habit  implements Serializable {
         return count;
     }
 }
-
-
-

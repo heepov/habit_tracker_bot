@@ -18,7 +18,7 @@ public class MyBot extends TelegramLongPollingBot {
     // Chat ID and Habit List (unique list for one user)
     public Map<Long, ArrayList<Habit>> habitsList;
     public LocalDate date;
-    // file with "bot User Name", "bot Token" and "data File Path"
+    // file with "bot Username", "bot Token" and "data File Path"
     private final Properties properties = new Properties();
     private final IncomingMessageHandler incomingMessageHandler;
     private final CallbackQueryHandler callbackQueryHandler;
@@ -64,7 +64,7 @@ public class MyBot extends TelegramLongPollingBot {
         //other user's actions
             System.out.println("Something else");
         }
-        // Сохранение данных при получении сообщений/обновлений
+        // save habitsList to data file
         saveDataToFile(properties.getProperty("dataFilePath"), habitsList);
     }
     @Override
